@@ -1,0 +1,18 @@
+{
+  "Outputs" : {
+    "Identity" : {
+      "MLFeatureShortDescription" : "--"
+    }
+  },
+  "Inputs" : {
+    "input2_model_part_2" : {
+      "MLFeatureShortDescription" : "--"
+    },
+    "input1_model_part_2" : {
+      "MLFeatureShortDescription" : "--"
+    }
+  },
+  "TrainingInputs" : {
+
+  }
+}
