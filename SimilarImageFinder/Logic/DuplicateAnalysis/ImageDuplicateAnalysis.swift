@@ -8,7 +8,7 @@ import CoreML
 
 class ImageDuplicateAnalysis: ObservableObject {
     
-    private let analyzer = ImageDuplicateAnalyzer()
+    private let analyzer = try! ImageDuplicateAnalyzer()
     
     @Published var selectedDirectory: URL! = nil
     private(set) var images: [URL] = []
@@ -17,7 +17,7 @@ class ImageDuplicateAnalysis: ObservableObject {
     @Published var progressValue: Double? = 0.0
     @Published var progressTotal: Double = 0.0
     
-    private var imageProcessed: Array<MLMultiArray> = []
+    private var imageFeaturesRepresentations: [ImageFeaturesRepresentation] = []
     
     @Published var potentialDuplicateSearched = false
     @Published var potentialDuplicate: [ImagePotentialDuplicate] = []
@@ -63,46 +63,57 @@ class ImageDuplicateAnalysis: ObservableObject {
     
     
     private func analyzeImages() async {
-        await MainActor.run {
-            self.progressTotal = Double(self.images.count)
-        }
-                
-        for i in 0..<Int(self.progressTotal) {
-            try? await Task.sleep(nanoseconds: UInt64(0.001 * 1e9))
-            await MainActor.run {
-//                if i % 31 == 0 {
-                    self.progressValue = self.progressValue ?? 0 + Double(i)
-                    self.progressInformation = "Analyze image \(i + 1) / \(self.images.count)"
-//                }
-            }
-            
-            analyzer.analyze(imageUrl: self.images[i])
-        }
+        let progress = ProgressTracker()
+        
+        let observer = progress.whenChanged().sink(receiveCompletion: {_ in }, receiveValue: {
+            self.progressValue = progress.current
+            self.progressTotal = progress.total
+            self.progressInformation = "Analyzing image \(Int(progress.current)) / \(Int(progress.total))"
+        })
+        
+        imageFeaturesRepresentations = await self.analyzer.createImageRepresentation(imageUrls: self.images, progressTracker: progress)
+        observer.cancel()
     }
     
     
     private func detectDuplicates() async {
-        await MainActor.run {
-            self.progressTotal = Double(self.images.count)
-
-        }
         
-        var list: [ImagePotentialDuplicate] = []
+        let progress = ProgressTracker()
         
-        for i in 0..<Int(self.progressTotal) {
-            try? await Task.sleep(nanoseconds: UInt64(0.001 * 1e9))
-            await MainActor.run {
-                self.progressValue = self.progressValue ?? 0 + Double(i)
-                self.progressInformation = "Searching for duplicates \(i + 1) / \(self.images.count)"
-            }
-            
-            list.append(ImagePotentialDuplicate(pathImageA: self.images[i], pathImageB: self.images[i], name: self.images[i].lastPathComponent, similarity: 0.1))
-        }
+        let observer = progress.whenChanged().sink(receiveCompletion: {_ in }, receiveValue: {
+            self.progressValue = progress.current
+            self.progressTotal = progress.total
+            self.progressInformation = "Comparison \(Int(progress.current)) / \(Int(progress.total))"
+        })
         
-        let l = list
-        await MainActor.run {
-            potentialDuplicate = l
-            potentialDuplicateSearched = true
-        }
+        let a = await analyzer.findDuplicates(imageRepresentations: self.imageFeaturesRepresentations, progress: progress)
+        print(a)
+        
+        observer.cancel()
+        
+        // TODO HERE
+        
+//        await MainActor.run {
+//            self.progressTotal = Double(self.images.count)
+//
+//        }
+//
+//        var list: [ImagePotentialDuplicate] = []
+//
+//        for i in 0..<Int(self.progressTotal) {
+//            try? await Task.sleep(nanoseconds: UInt64(0.001 * 1e9))
+//            await MainActor.run {
+//                self.progressValue = self.progressValue ?? 0 + Double(i)
+//                self.progressInformation = "Searching for duplicates \(i + 1) / \(self.images.count)"
+//            }
+//
+//            list.append(ImagePotentialDuplicate(pathImageA: self.images[i], pathImageB: self.images[i], name: self.images[i].lastPathComponent, similarity: 0.1))
+//        }
+//
+//        let l = list
+//        await MainActor.run {
+//            potentialDuplicate = l
+//            potentialDuplicateSearched = true
+//        }
     }
 }

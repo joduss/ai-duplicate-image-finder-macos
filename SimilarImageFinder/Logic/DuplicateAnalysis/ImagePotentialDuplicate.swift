@@ -9,13 +9,11 @@ struct ImagePotentialDuplicate: Hashable, Identifiable {
     var pathImageA: URL
     var pathImageB: URL
 
-    var name: String
     var similarity: Float
     
-    init(pathImageA: URL, pathImageB: URL, name: String, similarity: Float) {
+    init(pathImageA: URL, pathImageB: URL, similarity: Float) {
         self.pathImageA = pathImageA
         self.pathImageB = pathImageB
-        self.name = name
         self.similarity = similarity
         self.id = ObjectIdentifier(ImagePotentialDuplicate.self)
     }

@@ -17,11 +17,10 @@ struct DuplicateListView: View {
                 } placeholder: {
                     Text("...")
                 }
-                Text(c.name)
+//                Text(c.name)
             }.scaledToFill().padding().background(Color("cell-background-color"))
                 .cornerRadius(10)
-        }.listStyle(GroupedListStyle  ())
-            .frame(width: .infinity)
+        }.frame(width: .infinity)
     }
 }
 
@@ -36,19 +35,19 @@ struct DuplicateListView_Previews: PreviewProvider {
             ImagePotentialDuplicate(
                 pathImageA: URL(fileURLWithPath: Bundle.main.path(forResource: "img1", ofType: "jpg")!),
                 pathImageB: URL(fileURLWithPath: Bundle.main.path(forResource: "img2", ofType: "jpg")!),
-                name: "Grace Hopper",
+//                name: "Grace Hopper",
                 similarity: 0.1),
             
             ImagePotentialDuplicate(
                 pathImageA: URL(fileURLWithPath: Bundle.main.path(forResource: "img2", ofType: "jpg")!),
                 pathImageB: URL(fileURLWithPath: Bundle.main.path(forResource: "img3", ofType: "jpg")!),
-                name: "P4329349",
+//                name: "P4329349",
                 similarity: 0.1),
             
             ImagePotentialDuplicate(
                 pathImageA: URL(fileURLWithPath: Bundle.main.path(forResource: "img1", ofType: "jpg")!),
                 pathImageB: URL(fileURLWithPath: Bundle.main.path(forResource: "img3", ofType: "jpg")!),
-                name: "Blabla",
+//                name: "Blabla",
                 similarity: 0.1),
         ]
         
