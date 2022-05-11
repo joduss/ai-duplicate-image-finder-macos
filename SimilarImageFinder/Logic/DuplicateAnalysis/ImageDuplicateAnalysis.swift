@@ -1,5 +1,3 @@
-//
-
 import Foundation
 import UniformTypeIdentifiers
 import CoreML
@@ -17,16 +15,16 @@ class ImageDuplicateAnalysis: ObservableObject {
     @Published var progressValue: Double? = 0.0
     @Published var progressTotal: Double = 0.0
     
-    private var imageFeaturesRepresentations: [ImageFeaturesRepresentation] = []
+    private var imageEmbeddings: [ImageEmbedding] = []
     
     @Published var potentialDuplicateSearched = false
-    @Published var potentialDuplicate: [ImagePotentialDuplicate] = []
+    @Published var duplicates: [ImageDuplicatePair] = []
     
     /// Start the analysis.
     func start() {
-        Task.detached(priority: .userInitiated) {() in
+        Task.detached(priority: .userInitiated) { () in
             await self.searchImages()
-            await self.analyzeImages()
+            await self.computeImageEmbeddings()
             await self.detectDuplicates()
         }
     }
@@ -61,8 +59,7 @@ class ImageDuplicateAnalysis: ObservableObject {
         }
     }
     
-    
-    private func analyzeImages() async {
+    private func computeImageEmbeddings() async {
         let progress = ProgressTracker()
         
         let observer = progress.whenChanged().sink(receiveCompletion: {_ in }, receiveValue: {
@@ -71,10 +68,9 @@ class ImageDuplicateAnalysis: ObservableObject {
             self.progressInformation = "Analyzing image \(Int(progress.current)) / \(Int(progress.total))"
         })
         
-        imageFeaturesRepresentations = await self.analyzer.createImageRepresentation(imageUrls: self.images, progressTracker: progress)
+        imageEmbeddings = await self.analyzer.computeEmbeddings(imageUrls: self.images, progressTracker: progress)
         observer.cancel()
     }
-    
     
     private func detectDuplicates() async {
         
@@ -86,34 +82,15 @@ class ImageDuplicateAnalysis: ObservableObject {
             self.progressInformation = "Comparison \(Int(progress.current)) / \(Int(progress.total))"
         })
         
-        let a = await analyzer.findDuplicates(imageRepresentations: self.imageFeaturesRepresentations, progress: progress)
-        print(a)
+        let potentialDuplicates = await analyzer.findDuplicates(imageEmbeddings: self.imageEmbeddings, progress: progress)
+        let duplicates = potentialDuplicates.filter({$0.similarity > 0.5})
+        
+        await MainActor.run {
+            self.duplicates = duplicates
+            potentialDuplicateSearched = true
+        }
+        
         
         observer.cancel()
-        
-        // TODO HERE
-        
-//        await MainActor.run {
-//            self.progressTotal = Double(self.images.count)
-//
-//        }
-//
-//        var list: [ImagePotentialDuplicate] = []
-//
-//        for i in 0..<Int(self.progressTotal) {
-//            try? await Task.sleep(nanoseconds: UInt64(0.001 * 1e9))
-//            await MainActor.run {
-//                self.progressValue = self.progressValue ?? 0 + Double(i)
-//                self.progressInformation = "Searching for duplicates \(i + 1) / \(self.images.count)"
-//            }
-//
-//            list.append(ImagePotentialDuplicate(pathImageA: self.images[i], pathImageB: self.images[i], name: self.images[i].lastPathComponent, similarity: 0.1))
-//        }
-//
-//        let l = list
-//        await MainActor.run {
-//            potentialDuplicate = l
-//            potentialDuplicateSearched = true
-//        }
     }
 }

@@ -2,7 +2,7 @@
 
 import Foundation
 
-struct ImagePotentialDuplicate: Hashable, Identifiable {
+struct ImageDuplicatePair: Hashable, Identifiable {
     
     var id: ObjectIdentifier
     
@@ -11,16 +11,24 @@ struct ImagePotentialDuplicate: Hashable, Identifiable {
 
     var similarity: Float
     
+    var imageAName: String {
+        return pathImageA.lastPathComponent
+    }
+    
+    var imageBName: String {
+        return pathImageA.lastPathComponent
+    }
+    
     init(pathImageA: URL, pathImageB: URL, similarity: Float) {
         self.pathImageA = pathImageA
         self.pathImageB = pathImageB
         self.similarity = similarity
-        self.id = ObjectIdentifier(ImagePotentialDuplicate.self)
+        self.id = ObjectIdentifier(ImageDuplicatePair.self)
     }
     
     // MARK: - Hashable
     
-    static func == (lhs: ImagePotentialDuplicate, rhs: ImagePotentialDuplicate) -> Bool {
+    static func == (lhs: ImageDuplicatePair, rhs: ImageDuplicatePair) -> Bool {
         lhs.pathImageA == rhs.pathImageA && lhs.pathImageB == rhs.pathImageB
     }
 }

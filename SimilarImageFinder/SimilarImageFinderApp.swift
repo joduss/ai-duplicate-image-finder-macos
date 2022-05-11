@@ -15,6 +15,7 @@ struct SimilarImageFinderApp: App {
             } else if state.potentialDuplicateSearched == false {
                 AnalysisView().environmentObject(state).frame(minWidth: 400, idealWidth: 400, maxWidth: 600, minHeight: 400, idealHeight: 400, maxHeight: 400)
             } else {
+//                DuplicateListViewOld().environmentObject(state)
                 DuplicateListView().environmentObject(state)
             }
             

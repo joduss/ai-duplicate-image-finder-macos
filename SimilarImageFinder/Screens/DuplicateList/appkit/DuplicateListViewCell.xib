@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="DuplicateListViewCell" customModule="SimilarImageFinder" customModuleProvider="target"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <collectionViewItem id="zLO-kq-d6y" customClass="DuplicateListViewCell" customModule="SimilarImageFinder" customModuleProvider="target">
+            <connections>
+                <outlet property="imageLeftLabel" destination="H0j-o6-dJg" id="IDr-nN-fhD"/>
+                <outlet property="imageLeftView" destination="Jw2-eM-ED0" id="ES5-Zi-N5s"/>
+                <outlet property="imageRightLabel" destination="2CE-Gf-NAS" id="f3T-KI-FRv"/>
+                <outlet property="imageRightView" destination="QJt-zc-bXq" id="Qej-pz-wVt"/>
+                <outlet property="similarityLabel" destination="JU4-Ls-8XR" id="28j-he-jK6"/>
+                <outlet property="view" destination="c22-O7-iKe" id="1z6-67-h8Y"/>
+            </connections>
+        </collectionViewItem>
+        <customView id="c22-O7-iKe">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Jw2-eM-ED0">
+                    <rect key="frame" x="30" y="54" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Jw2-eM-ED0" secondAttribute="height" multiplier="1:1" id="bK9-ss-7JH"/>
+                        <constraint firstAttribute="height" constant="200" id="j2X-MW-nsu"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="EqL-bk-ven"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JU4-Ls-8XR">
+                    <rect key="frame" x="215" y="284" width="50" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="[0.885]" id="ZJe-MK-0ok">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QJt-zc-bXq">
+                    <rect key="frame" x="250" y="54" width="200" height="200"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="4xP-RE-5aE"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="H0j-o6-dJg">
+                    <rect key="frame" x="37" y="20" width="187" height="14"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" title="crans-montana-été-2007-565.JPG" id="cNg-ES-4uI">
+                        <font key="font" metaFont="systemLight" size="11"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2CE-Gf-NAS">
+                    <rect key="frame" x="334" y="20" width="33" height="14"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" title="Label" id="mkh-Za-ep2">
+                        <font key="font" metaFont="systemLight" size="11"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="JU4-Ls-8XR" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="1zk-tu-MH9"/>
+                <constraint firstItem="H0j-o6-dJg" firstAttribute="centerX" secondItem="Jw2-eM-ED0" secondAttribute="centerX" id="2b5-0g-FVF"/>
+                <constraint firstItem="2CE-Gf-NAS" firstAttribute="centerX" secondItem="QJt-zc-bXq" secondAttribute="centerX" id="8JA-Xt-dhV"/>
+                <constraint firstItem="QJt-zc-bXq" firstAttribute="centerY" secondItem="Jw2-eM-ED0" secondAttribute="centerY" id="8Sx-PP-Hhl"/>
+                <constraint firstAttribute="bottom" secondItem="H0j-o6-dJg" secondAttribute="bottom" constant="20" id="Bil-P4-tXL"/>
+                <constraint firstItem="Jw2-eM-ED0" firstAttribute="top" secondItem="JU4-Ls-8XR" secondAttribute="bottom" constant="30" id="RMb-Ub-gov"/>
+                <constraint firstAttribute="trailing" secondItem="QJt-zc-bXq" secondAttribute="trailing" constant="30" id="Sj5-HA-wAn"/>
+                <constraint firstItem="QJt-zc-bXq" firstAttribute="width" secondItem="Jw2-eM-ED0" secondAttribute="width" id="TDc-JO-SPI"/>
+                <constraint firstItem="2CE-Gf-NAS" firstAttribute="centerY" secondItem="H0j-o6-dJg" secondAttribute="centerY" id="Y42-1i-Zjs"/>
+                <constraint firstItem="QJt-zc-bXq" firstAttribute="leading" secondItem="Jw2-eM-ED0" secondAttribute="trailing" constant="20" id="ZY8-vx-uay"/>
+                <constraint firstItem="H0j-o6-dJg" firstAttribute="top" secondItem="Jw2-eM-ED0" secondAttribute="bottom" constant="20" id="clx-aZ-2wH"/>
+                <constraint firstItem="JU4-Ls-8XR" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="20" id="eFg-im-1pz"/>
+                <constraint firstItem="Jw2-eM-ED0" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="30" id="h2A-gG-3yI"/>
+                <constraint firstItem="QJt-zc-bXq" firstAttribute="height" secondItem="Jw2-eM-ED0" secondAttribute="height" id="rKP-87-x8o"/>
+            </constraints>
+            <point key="canvasLocation" x="98" y="120"/>
+        </customView>
+    </objects>
+</document>
