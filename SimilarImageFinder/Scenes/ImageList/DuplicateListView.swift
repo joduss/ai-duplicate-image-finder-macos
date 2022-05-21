@@ -7,18 +7,18 @@ class DuplicateListViewController: NSViewController, NSCollectionViewDataSource 
     
     @IBOutlet weak var collectionView: NSCollectionView!
     
-    private let analyzis: ImageDuplicateAnalysis
+    private let analyzis: ImageDuplicateAnalysisViewModel
     
     var potentialDuplicates: [ImageDuplicatePair] = []
     
-    init(analyzis: ImageDuplicateAnalysis) {
+    init(analyzis: ImageDuplicateAnalysisViewModel) {
         self.analyzis = analyzis
         self.potentialDuplicates = analyzis.duplicates
         super.init(nibName: "DuplicateListViewController", bundle: nil)
     }
     
     required init?(coder: NSCoder) {
-        self.analyzis = ImageDuplicateAnalysis()
+        self.analyzis = ImageDuplicateAnalysisViewModel()
         self.potentialDuplicates = analyzis.duplicates
         super.init(coder: coder)
     }
@@ -47,7 +47,7 @@ struct DuplicateListView: NSViewControllerRepresentable {
     
     typealias NSViewControllerType = DuplicateListViewController
     
-    @EnvironmentObject var analysis: ImageDuplicateAnalysis
+    @EnvironmentObject var analysis: ImageDuplicateAnalysisViewModel
 
     
     func makeNSViewController(context: Context) -> DuplicateListViewController {

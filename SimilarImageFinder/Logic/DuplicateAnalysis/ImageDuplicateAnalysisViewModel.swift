@@ -4,16 +4,11 @@ import CoreML
 
 
 
-class ImageDuplicateAnalysis: ObservableObject {
+class ImageDuplicateAnalysisViewModel: ImageAnalysisViewModel {
     
     private let analyzer = try! ImageDuplicateAnalyzer()
     
-    @Published var selectedDirectory: URL! = nil
     private(set) var images: [URL] = []
-    @Published private(set) var progressInformation: String = "Searching images..."
-    
-    @Published var progressValue: Double? = 0.0
-    @Published var progressTotal: Double = 0.0
     
     private var imageEmbeddings: [ImageEmbedding] = []
     
@@ -21,7 +16,7 @@ class ImageDuplicateAnalysis: ObservableObject {
     @Published var duplicates: [ImageDuplicatePair] = []
     
     /// Start the analysis.
-    func start() {
+    override func startAnalysis() {
         Task.detached(priority: .userInitiated) { () in
             await self.searchImages()
             await self.computeImageEmbeddings()
@@ -81,15 +76,16 @@ class ImageDuplicateAnalysis: ObservableObject {
             self.progressTotal = progress.total
             self.progressInformation = "Comparison \(Int(progress.current)) / \(Int(progress.total))"
         })
-        
+
         let potentialDuplicates = await analyzer.findDuplicates(imageEmbeddings: self.imageEmbeddings, progress: progress)
-        let duplicates = potentialDuplicates.filter({$0.similarity > 0.5})
-        
+        let duplicates = potentialDuplicates.filter({ $0.similarity > 0.5 })
+            .sorted(by: { $0.similarity > $1.similarity }) // Reverse order
+
         await MainActor.run {
             self.duplicates = duplicates
             potentialDuplicateSearched = true
         }
-        
+
         
         observer.cancel()
     }

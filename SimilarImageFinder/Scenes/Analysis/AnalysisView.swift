@@ -1,9 +1,8 @@
-//
 import SwiftUI
 
 struct AnalysisView: View {
     
-    @EnvironmentObject var duplicateImageAnalysis: ImageDuplicateAnalysis
+    @EnvironmentObject var duplicateImageAnalysis: ImageDuplicateAnalysisViewModel
     
     @State private var images: [URL] = []
     
@@ -14,7 +13,7 @@ struct AnalysisView: View {
                          total: duplicateImageAnalysis.progressTotal)
             .padding()
             .onAppear() {
-                duplicateImageAnalysis.start()
+                duplicateImageAnalysis.startAnalysis()
             }
         }
     }

@@ -1,21 +1,8 @@
-//
-
 import Foundation
 import CoreML
 import Vision
 import AppKit
 
-actor SyncArray<T> {
-    private var array: [T] = []
-    
-    public func append(_ item: T) {
-        array.append(item)
-    }
-    
-    public func toArray() -> [T] {
-        return array
-    }
-}
 
 class ImageDuplicateAnalyzer: ObservableObject {
     
@@ -77,7 +64,7 @@ class ImageDuplicateAnalyzer: ObservableObject {
             
             let count = Int(ceil((pow(Double(imageEmbeddings.count), 2.0))))
             var index = 0
-            var batch = ImageSimilarityModelInputBatch(size: batchSize)
+            var batch = ImageDuplicateClassifierInputBatch(size: batchSize)
             
             var predictions: [ImageDuplicatePair] = []
             predictions.reserveCapacity(count / 10)
@@ -95,7 +82,7 @@ class ImageDuplicateAnalyzer: ObservableObject {
                     let batchPotentialDuplicates = self.processBatchSimilarityPredictions(try? mlModel.predictions(fromBatch: batch), for: batch)
                     
                     predictions.append(contentsOf: batchPotentialDuplicates)
-                    batch = ImageSimilarityModelInputBatch(size: batchSize)
+                    batch = ImageDuplicateClassifierInputBatch(size: batchSize)
                     progress?.update(batchSize)
                 }
                 
@@ -114,7 +101,7 @@ class ImageDuplicateAnalyzer: ObservableObject {
     }
     
     
-    private func processBatchSimilarityPredictions(_ predictions: MLBatchProvider?, for batchFeatures: ImageSimilarityModelInputBatch) -> [ImageDuplicatePair] {
+    private func processBatchSimilarityPredictions(_ predictions: MLBatchProvider?, for batchFeatures: ImageDuplicateClassifierInputBatch) -> [ImageDuplicatePair] {
         guard let predictions = predictions else {
             return  []
         }
@@ -141,57 +128,5 @@ class ImageDuplicateAnalyzer: ObservableObject {
         }
         
         return potentialDuplicates
-    }
-    
-    
-    class ImageSimilarityModelInputBatch: MLBatchProvider {
-        public private(set) var imageRepresentations: [(ImageEmbedding, ImageEmbedding)]
-
-        var count: Int {
-            return self.imageRepresentations.count
-        }
-        
-        
-        init(imageRepresentations: [(ImageEmbedding, ImageEmbedding)]) {
-            self.imageRepresentations = imageRepresentations
-        }
-        
-        init(size: Int) {
-            self.imageRepresentations = []
-            self.imageRepresentations.reserveCapacity(size)
-        }
-        
-        func features(at index: Int) -> MLFeatureProvider {
-            
-            let representations = imageRepresentations[index]
-            
-            return ImageSimilarityModelInputFeatures(imageA: representations.0, imageB: representations.1)
-        }
-        
-        func add(_ representations: (ImageEmbedding, ImageEmbedding)) {
-            self.imageRepresentations.append(representations)
-        }
-    }
-    
-    class ImageSimilarityModelInputFeatures: MLFeatureProvider {
-        var featureNames: Set<String> = Set<String>(arrayLiteral: "input1_model_part_2", "input2_model_part_2")
-        
-        private let imageA: ImageEmbedding
-        private let imageB: ImageEmbedding
-        
-        init(imageA: ImageEmbedding, imageB: ImageEmbedding) {
-            self.imageA = imageA
-            self.imageB = imageB
-        }
-        
-        func featureValue(for featureName: String) -> MLFeatureValue? {
-            if (featureName == "input1_model_part_2") {
-                return MLFeatureValue(multiArray: imageA.embedding.Identity)
-            }
-            else {
-                return MLFeatureValue(multiArray: imageB.embedding.Identity)
-            }
-        }
-    }
-    
+    }    
 }

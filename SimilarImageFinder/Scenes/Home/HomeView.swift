@@ -5,7 +5,7 @@ import os.log
 
 struct HomeView: View {
     
-    @EnvironmentObject var state: ImageDuplicateAnalysis
+    @EnvironmentObject var state: ImageDuplicateAnalysisViewModel
     @State var selectedDirectory: URL!
     
     var body: some View {
